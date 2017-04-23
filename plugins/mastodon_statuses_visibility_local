@@ -16,5 +16,4 @@ EOM
         exit 0;;
 esac
 
-echo "select format('statuses_%s.value %s',visibility, 100*nb::numeric/total) from (select visibility, count(*) as nb from statuses s join accounts a on (a.id=s.account_id and a.domain is null) group by 1 order by 1) as s, (select count(*) as total from statuses s join accounts a on (a.id=s.account_id and a.domain is null)) as t;" | psql mastodon -tA
-
+echo "select format('statuses_%s.value %s',vis, coalesce(100*nb/total::numeric,0)) from (select generate_series(0,3) as vis) as v left join (select visibility, count(*) as nb from statuses s join accounts a on (a.id=s.account_id and a.domain is null) where s.created_at > now() - INTERVAL '1 hour' group by 1) as s on (vis=visibility), (select count(*) as total from statuses s join accounts a on (a.id=s.account_id and a.domain is null) where s.created_at > now() - INTERVAL '1 hour') as t;" | psql mastodon -tA
