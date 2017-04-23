@@ -1,0 +1,16 @@
+#!/bin/sh
+
+case $1 in
+   config)
+        cat <<'EOM'
+graph_title Mastodon streams/websockets
+graph_vlabel count
+graph_category mastodon
+graph_args -l 0
+streams.label active websockets
+streams.min 0
+EOM
+        exit 0;;
+esac
+
+echo "streams.value `netstat -t | grep ':4000 .* ESTABLISHED' | wc -l`"

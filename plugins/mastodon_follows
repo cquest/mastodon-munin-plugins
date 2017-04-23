@@ -1,0 +1,25 @@
+#!/bin/sh
+
+case $1 in
+   config)
+        cat <<'EOM'
+graph_title Mastodon follows
+graph_vlabel accounts
+graph_category mastodon
+graph_args -l 0
+in_in.label internal follow
+in_in.min 0
+in_out.label local following ext.
+in_out.min 0
+out_in.label ext. following local
+out_in.min 0
+EOM
+        exit 0;;
+esac
+
+printf "in_in.value "
+echo "select count(*) from follows f join accounts a on (a.id=account_id) join accounts t on (t.id=target_account_id) where a.domain is null and t.domain is null;" | psql mastodon -tq | head -n 1
+printf "in_out.value "
+echo "select count(*) from follows f join accounts a on (a.id=account_id) join accounts t on (t.id=target_account_id) where a.domain is null and t.domain is not null;" | psql mastodon -tq | head -n 1
+printf "out_in.value "
+echo "select count(*) from follows f join accounts a on (a.id=account_id) join accounts t on (t.id=target_account_id) where a.domain is not null and t.domain is null;" | psql mastodon -tq | head -n 1

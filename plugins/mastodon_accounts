@@ -1,0 +1,32 @@
+#!/bin/sh
+
+case $1 in
+   config)
+        cat <<'EOM'
+graph_title Mastodon accounts
+graph_vlabel accounts
+graph_category mastodon
+graph_args -l 0
+accounts_valid.label confirmed accounts
+accounts_valid.min 0
+accounts_waiting.label unconfirmed accounts
+accounts_waiting.min 0
+accounts_remote.label remote accounts
+accounts_remote.min 0
+accounts_remote_domains.label remote instances
+accounts_remote_domains.min 0
+EOM
+        exit 0;;
+esac
+
+printf "accounts_valid.value "
+echo "SELECT COUNT(*) FROM users WHERE confirmed_at is not null;" | psql mastodon -tq | head -n 1
+printf "accounts_waiting.value "
+echo "SELECT COUNT(*) FROM users WHERE confirmed_at is null;" | psql mastodon -tq | head -n 1
+printf "accounts_remote.value "
+echo "SELECT COUNT(*) FROM accounts WHERE domain is not null;" | psql mastodon -tq | head -n 1
+printf "accounts_remote_domains.value "
+echo "SELECT COUNT(distinct(domain)) FROM accounts WHERE domain is not null;" | psql mastodon -tq | head -n 1
+
+
+

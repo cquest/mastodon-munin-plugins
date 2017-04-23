@@ -1,0 +1,20 @@
+#!/bin/sh
+
+case $1 in
+   config)
+        cat <<'EOM'
+graph_title Mastodon toots/statuses vis.
+graph_vlabel % count
+graph_category mastodon
+graph_args -l 0 -u 100 -r
+graph_scale no
+statuses_0.label % public
+statuses_1.label % non-listed
+statuses_2.label % private
+statuses_3.label % direct
+EOM
+        exit 0;;
+esac
+
+echo "select format('statuses_%s.value %s',visibility, 100*nb::numeric/total) from (select visibility, count(*) as nb from statuses s join accounts a on (a.id=s.account_id and a.domain is null) group by 1 order by 1) as s, (select count(*) as total from statuses s join accounts a on (a.id=s.account_id and a.domain is null)) as t;" | psql mastodon -tA
+
