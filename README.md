@@ -13,7 +13,7 @@ As root:
 git clone https://github.com/cquest/mastodon-munin-plugins.git
 cd mastodon-munin-plugins/
 ln -s $PWD/plugins/mastodon_{accounts,follows,statuses,statuses_visibility_local,streams} /etc/munin/plugins/
-ln -s $PWD/plugins-conf.d/mastodon /etc/munin/plugin-conf.d/
+ln -s $PWD/plugin-conf.d/mastodon /etc/munin/plugin-conf.d/
 service munin-node restart
 ```
 
