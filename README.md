@@ -5,6 +5,7 @@ Some munin plugins to graph Mastodon activity
 * open websockets
 * confirmed, unconfirmed and remote accounts
 * remote instances linked
+* toots visibility (smoothed on 24 hours)
 
 ## Installation
 
