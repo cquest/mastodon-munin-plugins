@@ -13,4 +13,4 @@ EOM
         exit 0;;
 esac
 
-echo "streams.value `netstat -t | grep ':4000 .* ESTABLISHED' | wc -l`"
+echo "streams.value $(ss -o state established '( dport = :4000 )' | wc -l)"
