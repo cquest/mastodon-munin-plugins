@@ -17,9 +17,12 @@ EOM
         exit 0;;
 esac
 
+# default value: mastodon
+DATABASE=${database:-mastodon}
+
 printf "in_in.value "
-echo "select count(*) from follows f join accounts a on (a.id=account_id) join accounts t on (t.id=target_account_id) where a.domain is null and t.domain is null;" | psql mastodon -tq | head -n 1
+echo "select count(*) from follows f join accounts a on (a.id=account_id) join accounts t on (t.id=target_account_id) where a.domain is null and t.domain is null;" | psql $DATABASE -tq | head -n 1
 printf "in_out.value "
-echo "select count(*) from follows f join accounts a on (a.id=account_id) join accounts t on (t.id=target_account_id) where a.domain is null and t.domain is not null;" | psql mastodon -tq | head -n 1
+echo "select count(*) from follows f join accounts a on (a.id=account_id) join accounts t on (t.id=target_account_id) where a.domain is null and t.domain is not null;" | psql $DATABASE -tq | head -n 1
 printf "out_in.value "
-echo "select count(*) from follows f join accounts a on (a.id=account_id) join accounts t on (t.id=target_account_id) where a.domain is not null and t.domain is null;" | psql mastodon -tq | head -n 1
+echo "select count(*) from follows f join accounts a on (a.id=account_id) join accounts t on (t.id=target_account_id) where a.domain is not null and t.domain is null;" | psql $DATABASE -tq | head -n 1

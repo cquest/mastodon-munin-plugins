@@ -16,4 +16,7 @@ EOM
         exit 0;;
 esac
 
-echo "select format('statuses_%s.value %s',vis, coalesce(100*nb/total::numeric,0)) from (select generate_series(0,3) as vis) as v left join (select visibility, count(*) as nb from statuses s join accounts a on (a.id=s.account_id and a.domain is null) where s.created_at > now() - INTERVAL '1 day' group by 1) as s on (vis=visibility), (select count(*) as total from statuses s join accounts a on (a.id=s.account_id and a.domain is null) where s.created_at > now() - INTERVAL '1 day') as t;" | psql mastodon -tA
+# default value: mastodon
+DATABASE=${database:-mastodon}
+
+echo "select format('statuses_%s.value %s',vis, coalesce(100*nb/total::numeric,0)) from (select generate_series(0,3) as vis) as v left join (select visibility, count(*) as nb from statuses s join accounts a on (a.id=s.account_id and a.domain is null) where s.created_at > now() - INTERVAL '1 day' group by 1) as s on (vis=visibility), (select count(*) as total from statuses s join accounts a on (a.id=s.account_id and a.domain is null) where s.created_at > now() - INTERVAL '1 day') as t;" | psql $DATABASE -tA
