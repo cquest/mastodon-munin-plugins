@@ -16,11 +16,14 @@ EOM
 esac
 
 
+# default value: mastodon
+DATABASE=${database:-mastodon}
+
 printf "statuses_total.value "
-echo "SELECT COUNT(*) FROM statuses;" | psql mastodon -tq | head -n 1
+echo "SELECT COUNT(*) FROM statuses;" | psql $DATABASE -tq | head -n 1
 
 printf "statuses_local.value "
-echo "SELECT COUNT(*) FROM statuses AS s, accounts AS a WHERE a.id=s.account_id AND a.domain IS NULL;" | psql mastodon -tq | head -n 1
+echo "SELECT COUNT(*) FROM statuses AS s, accounts AS a WHERE a.id=s.account_id AND a.domain IS NULL;" | psql $DATABASE -tq | head -n 1
 
 
 

@@ -19,14 +19,17 @@ EOM
         exit 0;;
 esac
 
+# default value: mastodon
+DATABASE=${database:-mastodon}
+
 printf "accounts_valid.value "
-echo "SELECT COUNT(*) FROM users WHERE confirmed_at is not null;" | psql mastodon -tq | head -n 1
+echo "SELECT COUNT(*) FROM users WHERE confirmed_at is not null;" | psql $DATABASE -tq | head -n 1
 printf "accounts_waiting.value "
-echo "SELECT COUNT(*) FROM users WHERE confirmed_at is null;" | psql mastodon -tq | head -n 1
+echo "SELECT COUNT(*) FROM users WHERE confirmed_at is null;" | psql $DATABASE -tq | head -n 1
 printf "accounts_remote.value "
-echo "SELECT COUNT(*) FROM accounts WHERE domain is not null;" | psql mastodon -tq | head -n 1
+echo "SELECT COUNT(*) FROM accounts WHERE domain is not null;" | psql $DATABASE -tq | head -n 1
 printf "accounts_remote_domains.value "
-echo "SELECT COUNT(distinct(domain)) FROM accounts WHERE domain is not null;" | psql mastodon -tq | head -n 1
+echo "SELECT COUNT(distinct(domain)) FROM accounts WHERE domain is not null;" | psql $DATABASE -tq | head -n 1
 
 
 
